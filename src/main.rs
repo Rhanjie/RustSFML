@@ -1,5 +1,6 @@
-mod game_manager;
 mod custom_triangle;
+mod game_manager;
+mod resource_manager;
 
 use crate::game_manager::GameManager;
 

@@ -1,15 +1,17 @@
-use std::borrow::Borrow;
 use sfml::{
     graphics::{Color, CustomShape, CustomShapePoints, RenderTarget, RenderWindow, Shape},
     system::Vector2f,
     window::{Event, Key, Style},
 };
+use std::borrow::Borrow;
 
 use crate::custom_triangle::TriangleShape;
+use crate::resource_manager::ResourceManager;
 
 pub struct GameManager<'a> {
     window: RenderWindow,
     shape: CustomShape<'a>,
+    resource_manager: ResourceManager
 }
 
 impl<'a> GameManager<'a> {
@@ -17,6 +19,7 @@ impl<'a> GameManager<'a> {
         let mut instance = GameManager {
             window: RenderWindow::new((x, y), title, Style::CLOSE, &Default::default()),
             shape: CustomShape::new(Box::new(TriangleShape)),
+            resource_manager: ResourceManager::new("./res/")
         };
 
         instance.init();
@@ -43,7 +46,7 @@ impl<'a> GameManager<'a> {
         while let Some(event) = self.window.poll_event() {
             match event {
                 Event::Closed => self.window.close(),
-                Event::KeyPressed {code, ..} => {
+                Event::KeyPressed { code, .. } => {
                     if let Key::SPACE = code {
                         println!("Button {:?} is pressed!", code)
                     }
