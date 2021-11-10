@@ -1,0 +1,2 @@
+# RustSFML
+Just simple test
