@@ -13,11 +13,14 @@ pub struct GameManager<'a> {
 }
 
 impl<'a> GameManager<'a> {
-    pub fn new(x: u32, y: u32, title: String) -> Self {
-        GameManager {
-            window: RenderWindow::new((x, y), "title", Style::CLOSE, &Default::default()),
+    pub fn new(x: u32, y: u32, title: &str) -> Self {
+        let mut instance = GameManager {
+            window: RenderWindow::new((x, y), title, Style::CLOSE, &Default::default()),
             shape: CustomShape::new(Box::new(TriangleShape)),
-        }
+        };
+
+        instance.init();
+        return instance;
     }
 
     pub fn init(&mut self) {
@@ -27,16 +30,8 @@ impl<'a> GameManager<'a> {
     }
 
     pub fn run(&mut self) {
-        loop {
-            while let Some(event) = self.window.poll_event() {
-                match event {
-                    Event::Closed
-                    {
-
-                    } => return,
-                    _ => {}
-                }
-            }
+        while self.window.is_open() {
+            self.poll_events();
 
             self.window.clear(Color::BLACK);
             self.window.draw(&self.shape);
@@ -44,14 +39,23 @@ impl<'a> GameManager<'a> {
         }
     }
 
-    pub fn poll_events() {
-
+    pub fn poll_events(&mut self) {
+        while let Some(event) = self.window.poll_event() {
+            match event {
+                Event::Closed => self.window.close(),
+                Event::KeyPressed {code, ..} => {
+                    if let Key::SPACE = code {
+                        println!("Button {:?} is pressed!", code)
+                    }
+                }
+                _ => {}
+            }
+        }
     }
 
     fn create_shape(&mut self) {
-        //self.shape = CustomShape::new(Box::new(TriangleShape));
         self.shape.set_fill_color(Color::RED);
         self.shape.set_outline_color(Color::GREEN);
-        self.shape.set_outline_thickness(3.);
+        self.shape.set_outline_thickness(2.);
     }
 }
